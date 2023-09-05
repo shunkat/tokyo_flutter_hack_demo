@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "80001120434",
+    "project_id": "tokyo-flutter-hack-demo",
+    "storage_bucket": "tokyo-flutter-hack-demo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:80001120434:android:6c919ef3d76228566d71ab",
+        "android_client_info": {
+          "package_name": "com.example.tokyo_flutter_hack_demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "80001120434-ahpabn0jnj3au5rqssqpmv4a8lfb6fk9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtvieWgSa7EVQ5o5GobdIPLoE48QibQwI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "80001120434-ahpabn0jnj3au5rqssqpmv4a8lfb6fk9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "80001120434-e2k0vste4hk3hsi7n8piq1otrg90fk6o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tokyoFlutterHackDemo.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

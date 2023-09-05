@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'supabase_page.dart';
 import 'firebase_page.dart';
 
@@ -13,6 +15,12 @@ Future<void> main() async {
     url: dotenv.get('supabaseUrl'),
     anonKey: dotenv.get('supabaseAnonKey')
   );
+
+  // firebaseの初期化
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 class MyApp extends StatelessWidget {
