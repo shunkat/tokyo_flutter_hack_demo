@@ -1,16 +1,9 @@
-# tokyo_flutter_hack_demo
+# バージョンとか
+Flutter version 3.10.6
+Dart 3.0.6
+Android Studio Giraffe 2022.3.1
+Idk AndroidAPI34 extension level 7 platform Android SDK
 
-A new Flutter project.
+supabaseのDBパスワード：P6Ym*bqRJ6KtM88
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+.envの中身はslackにあります。

@@ -7,6 +7,8 @@ import 'firebase_page.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
+
+  // supabaseの初期化
   await Supabase.initialize(
     url: dotenv.get('supabaseUrl'),
     anonKey: dotenv.get('supabaseAnonKey')
