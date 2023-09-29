@@ -11,7 +11,7 @@ class SupabasePage extends StatefulWidget {
 class _SupabasePageState extends State<SupabasePage> {
   // Streamでリアルタイムにデータを取得する.
   final _noteStream =
-  Supabase.instance.client.from('notes').stream(primaryKey: ['id']);
+      Supabase.instance.client.from('notes').stream(primaryKey: ['id']);
   // Formの値を保存するTextEditingController.
   TextEditingController _body = TextEditingController();
 
@@ -47,8 +47,8 @@ class _SupabasePageState extends State<SupabasePage> {
                                     return SimpleDialog(
                                       title: const Text('Add a Note'),
                                       contentPadding:
-                                      const EdgeInsets.symmetric(
-                                          horizontal: 1.0),
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 1.0),
                                       children: [
                                         TextFormField(
                                           controller: _body,
@@ -92,7 +92,7 @@ class _SupabasePageState extends State<SupabasePage> {
                     ),
                   ),
                   title: Text(notes[index]['body']), // Mapでbodyデータを取得.
-                  subtitle: Text(notes[index]['created_at']),// 作成された日時を取得.
+                  subtitle: Text(notes[index]['created_at']), // 作成された日時を取得.
                 );
               },
             );
