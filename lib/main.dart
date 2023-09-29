@@ -4,6 +4,8 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:tokyo_flutter_hack_demo/common/components/app_button.dart';
+import 'package:tokyo_flutter_hack_demo/common/components/app_modal.dart';
 import 'package:tokyo_flutter_hack_demo/common/styles/app_text_style.dart';
 import 'package:tokyo_flutter_hack_demo/router.dart';
 import 'firebase_options.dart';
@@ -71,6 +73,32 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            AppButton(
+                onTap: () {
+                  AppModal.show(
+                    context,
+                    title: 'モーダル',
+                    description: 'ディスクリプション',
+                    cancelButtonText: 'キャンセル',
+                    onButtonTapped: () {
+                      Navigator.pop(context);
+                    },
+                    cancelButtonTapped: () {
+                      Navigator.pop(context);
+                    },
+                  );
+                },
+                text: 'OK',
+                style: AppButtonStyle.filled),
+            const SizedBox(
+              height: 8,
+            ),
+            AppButton(
+                onTap: () {
+                  print('tapped!');
+                },
+                text: 'キャンセル',
+                style: AppButtonStyle.bordered),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(context,
