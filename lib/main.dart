@@ -7,7 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tokyo_flutter_hack_demo/common/components/app_button.dart';
 import 'package:tokyo_flutter_hack_demo/common/components/app_modal.dart';
 import 'package:tokyo_flutter_hack_demo/common/styles/app_text_style.dart';
-import 'package:tokyo_flutter_hack_demo/features/image_picker/image_picker_page.dart';
+import 'package:tokyo_flutter_hack_demo/features/image_picker/image_picker_page2.dart';
 import 'package:tokyo_flutter_hack_demo/firebase_page.dart';
 import 'package:tokyo_flutter_hack_demo/router.dart';
 import 'package:tokyo_flutter_hack_demo/supabase_page.dart';
@@ -122,8 +122,12 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            const ImagePickerPage(title: Text("test"))));
+                        builder: (context) => ImagePicker2(
+                              title: const Text("画像選択"),
+                              onImageSelected: (image) {
+                                Navigator.pop(context);
+                              },
+                            )));
               },
               child: const Text('Picker画面へ'),
             ),

@@ -9,8 +9,6 @@ import 'package:image/image.dart' as img;
 import 'package:photo_manager/photo_manager.dart';
 import 'package:tokyo_flutter_hack_demo/features/image_picker/image_picker_collection.dart';
 
-final selectedImageProvider = StateProvider<AssetEntity?>((ref) => null);
-
 class ImagePickerPage extends StatefulWidget {
   final Function(img.Image)? onImageSelected;
   final String actionText;

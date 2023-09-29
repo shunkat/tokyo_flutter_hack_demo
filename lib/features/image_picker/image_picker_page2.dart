@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image/image.dart' as img;
 import 'package:photo_manager/photo_manager.dart';
@@ -29,7 +30,13 @@ class ImagePicker2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
-      child: ImagePickerPage2(),
+      child: ImagePickerPage2(
+        onImageSelected: onImageSelected,
+        actionText: actionText,
+        title: title,
+        ratio: ratio,
+        loadingWidget: loadingWidget,
+      ),
     );
   }
 }
@@ -40,227 +47,261 @@ class _GridStatusNotifier {
   _GridStatusNotifier(this.imageRect, this.opacity);
 }
 
+final directoriesProvider = StateProvider<List<AssetPathEntity>>((ref) => []);
+final selectedDirectoryProvider =
+    StateProvider<AssetPathEntity?>((ref) => null);
+
 class ImagePickerPage2 extends HookConsumerWidget {
+  final Function(img.Image)? onImageSelected;
+  final String actionText;
+  final Widget title;
+  final double? ratio;
+  final Widget? loadingWidget;
+
+  ImagePickerPage2({
+    Key? key,
+    required this.title,
+    this.onImageSelected,
+    this.ratio,
+    this.actionText = '次へ',
+    this.loadingWidget,
+  }) : super(key: key);
+
   static const double _MAX_CROP_RATIO = 5 / 4; // height / width
   static const double _MIN_CROP_RATIO = 1 / 1.91;
 
-  List<AssetPathEntity>? directories;
-  AssetPathEntity? selectedDirectory;
   List<AssetEntity>? images;
-  AssetEntity? selectedImage;
 
   final GlobalKey<ExtendedImageGestureState> _gestureKey =
       GlobalKey<ExtendedImageGestureState>();
   final gridStatus = ValueNotifier<_GridStatusNotifier?>(null);
   Timer? gridTimer;
 
-  ImagePickerPage2({super.key});
-
-  @override
-  void initState() {
-    super.initState();
-    getImagesPath();
-  }
-
-  getImagesPath() async {
-    directories = await PhotoManager.getAssetPathList(type: RequestType.image);
-    selectedDirectory = directories?.firstWhere((d) => d.isAll);
-    final assetCount = await selectedDirectory?.assetCountAsync;
-    images = await selectedDirectory?.getAssetListRange(
-        start: 0, end: assetCount ?? 0);
-    selectedImage = images?.first;
-    setState(() {});
+  initDirectories(WidgetRef ref) async {
+    final directoriesController = ref.watch(directoriesProvider.notifier);
+    final selectedDirectoryController =
+        ref.watch(selectedDirectoryProvider.notifier);
+    final selectedImageController = ref.watch(selectedImageProvider.notifier);
+    final directories =
+        await PhotoManager.getAssetPathList(type: RequestType.image);
+    directoriesController.state = directories;
+    final firstDirectory = directories.firstWhere((d) => d.isAll);
+    final assetCount = await firstDirectory.assetCountAsync;
+    selectedDirectoryController.state = firstDirectory;
+    final images =
+        await firstDirectory.getAssetListRange(start: 0, end: assetCount);
+    selectedImageController.state = images.first;
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ProviderScope(
-      child: Scaffold(
-        appBar: AppBar(
-          title: widget.title,
-          actions: [
-            TextButton(
-              onPressed: () async {
-                executer() async {
-                  final gestureDetails =
-                      _gestureKey.currentState!.gestureDetails;
-                  final file = await selectedImage!.file;
-                  final data = file!.readAsBytesSync();
-                  final src = img.decodeImage(data)!;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isCropping = useState(false);
 
-                  final cropArea = computeCropRect(
-                    src,
-                    destinationRect: gestureDetails!.destinationRect!,
-                    cropAreaRect: gestureDetails.layoutRect!,
-                  );
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        initDirectories(ref);
+      });
+      return null;
+    }, []);
 
-                  final croppedImage = cropImage(src, cropArea);
-                  final resizedImage =
-                      img.copyResize(croppedImage, width: 1080);
-                  widget.onImageSelected?.call(resizedImage);
-                }
+    final selectedDirectory = ref.watch(selectedDirectoryProvider);
 
-                showGeneralDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  transitionDuration: const Duration(milliseconds: 300),
-                  barrierColor: Colors.black.withOpacity(0.5),
-                  pageBuilder: (BuildContext context, Animation animation,
-                      Animation secondaryAnimation) {
-                    executer().then((_) => Navigator.of(context).pop());
-                    return const Center(child: CircularProgressIndicator());
-                  },
+    return Scaffold(
+      appBar: AppBar(
+        title: title,
+        actions: [
+          TextButton(
+            onPressed: () async {
+              // isCropping.value = true;
+              executer() async {
+                final selectedImage = ref.read(selectedImageProvider);
+
+                final gestureDetails = _gestureKey.currentState!.gestureDetails;
+                final file = await selectedImage!.file;
+                final data = file!.readAsBytesSync();
+                final src = img.decodeImage(data)!;
+
+                final cropArea = computeCropRect(
+                  src,
+                  destinationRect: gestureDetails!.destinationRect!,
+                  cropAreaRect: gestureDetails.layoutRect!,
                 );
-              },
-              child: Text(widget.actionText,
-                  style: const TextStyle(fontSize: 18, color: Colors.white)),
-            ),
-          ],
-        ),
-        body: Column(
-          children: <Widget>[
-            Container(
-              height: MediaQuery.of(context).size.width,
-              color: Colors.black,
-              child: Stack(
-                children: [
-                  selectedImage != null
-                      ? FutureBuilder<Uint8List?>(
-                          future: selectedImage!.thumbnailDataWithSize(
-                              const ThumbnailSize(2400, 2400)),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return CustomPaint(
-                                foregroundPainter:
-                                    GridPainter(repaint: gridStatus),
-                                child: Listener(
-                                  onPointerDown: (_) => {startShowGrid()},
-                                  onPointerUp: (_) => {endShowGrid()},
-                                  child: ExtendedImage.memory(
-                                    snapshot.data!,
-                                    fit: BoxFit.contain,
-                                    constraints: const BoxConstraints.expand(),
-                                    mode: ExtendedImageMode.gesture,
-                                    extendedImageGestureKey: _gestureKey,
-                                    initGestureConfigHandler: (state) {
-                                      final image =
-                                          state.extendedImageInfo!.image;
-                                      final ratio = image.height / image.width;
-                                      final initialScale =
-                                          max(ratio, 1 / ratio).toDouble();
 
-                                      final double minimumScale;
-                                      if (widget.ratio == null) {
-                                        final needCrop =
-                                            ratio > _MAX_CROP_RATIO ||
-                                                ratio < _MIN_CROP_RATIO;
-                                        minimumScale = max(
-                                            needCrop
-                                                ? (ratio > _MAX_CROP_RATIO
-                                                    ? initialScale /
-                                                        _MAX_CROP_RATIO
-                                                    : initialScale *
-                                                        _MIN_CROP_RATIO)
-                                                : 1.0,
-                                            1.0);
-                                      } else {
-                                        final needCrop =
-                                            ratio > widget.ratio! ||
-                                                ratio < widget.ratio!;
-                                        minimumScale = max(
-                                            needCrop
-                                                ? (ratio > widget.ratio!
-                                                    ? initialScale /
-                                                        widget.ratio!
-                                                    : initialScale *
-                                                        widget.ratio!)
-                                                : 1.0,
-                                            1.0);
-                                      }
+                final croppedImage = cropImage(src, cropArea);
+                final resizedImage = img.copyResize(croppedImage, width: 1080);
 
-                                      return GestureConfig(
-                                        minScale: minimumScale,
-                                        initialScale: initialScale,
-                                        animationMinScale: minimumScale * 0.85,
-                                      );
-                                    },
+                onImageSelected?.call(resizedImage);
+              }
+
+              showGeneralDialog(
+                context: context,
+                barrierDismissible: false,
+                transitionDuration: const Duration(milliseconds: 300),
+                barrierColor: Colors.black.withOpacity(0.5),
+                pageBuilder: (BuildContext context, Animation animation,
+                    Animation secondaryAnimation) {
+                  executer().then((_) => Navigator.of(context).pop());
+                  return const Center(child: CircularProgressIndicator());
+                },
+              );
+            },
+            child: Text(actionText,
+                style: const TextStyle(fontSize: 18, color: Colors.white)),
+          ),
+        ],
+      ),
+      body: Column(
+        children: <Widget>[
+          Container(
+            height: MediaQuery.of(context).size.width,
+            color: Colors.black,
+            child: Stack(
+              children: [
+                Consumer(
+                  builder: (context, ref, _) {
+                    final selectedImage = ref.watch(selectedImageProvider);
+                    return selectedImage != null
+                        ? FutureBuilder<Uint8List?>(
+                            future: selectedImage.thumbnailDataWithSize(
+                                const ThumbnailSize(2400, 2400)),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return CustomPaint(
+                                  foregroundPainter:
+                                      GridPainter(repaint: gridStatus),
+                                  child: Listener(
+                                    onPointerDown: (_) => {startShowGrid()},
+                                    onPointerUp: (_) => {endShowGrid()},
+                                    child: ExtendedImage.memory(
+                                      snapshot.data!,
+                                      fit: BoxFit.contain,
+                                      constraints:
+                                          const BoxConstraints.expand(),
+                                      mode: ExtendedImageMode.gesture,
+                                      extendedImageGestureKey: _gestureKey,
+                                      initGestureConfigHandler: (state) {
+                                        final image =
+                                            state.extendedImageInfo!.image;
+                                        final ratio =
+                                            image.height / image.width;
+                                        final initialScale =
+                                            max(ratio, 1 / ratio).toDouble();
+
+                                        final double minimumScale;
+                                        if (ratio == null) {
+                                          final needCrop =
+                                              ratio > _MAX_CROP_RATIO ||
+                                                  ratio < _MIN_CROP_RATIO;
+                                          minimumScale = max(
+                                              needCrop
+                                                  ? (ratio > _MAX_CROP_RATIO
+                                                      ? initialScale /
+                                                          _MAX_CROP_RATIO
+                                                      : initialScale *
+                                                          _MIN_CROP_RATIO)
+                                                  : 1.0,
+                                              1.0);
+                                        } else {
+                                          final needCrop =
+                                              ratio > ratio || ratio < ratio;
+                                          minimumScale = max(
+                                              needCrop
+                                                  ? (ratio > ratio
+                                                      ? initialScale / ratio
+                                                      : initialScale * ratio)
+                                                  : 1.0,
+                                              1.0);
+                                        }
+
+                                        return GestureConfig(
+                                          minScale: minimumScale,
+                                          initialScale: initialScale,
+                                          animationMinScale:
+                                              minimumScale * 0.85,
+                                        );
+                                      },
+                                    ),
                                   ),
-                                ),
-                              );
-                            } else {
-                              return loadingWidget();
-                            }
-                          })
-                      : loadingWidget(),
-                  Positioned(
-                    left: 5,
-                    bottom: 5,
-                    child: ElevatedButton.icon(
+                                );
+                              } else {
+                                return loading();
+                              }
+                            })
+                        : loading();
+                  },
+                ),
+                Positioned(
+                  left: 5,
+                  bottom: 5,
+                  child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black.withAlpha(160),
                         padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                         minimumSize: const Size(0, 0),
                       ),
-                      onPressed: () => showFolderList(),
+                      onPressed: () => showFolderList(ref),
                       icon: const Icon(
                         Icons.folder,
                         color: Colors.white,
                         size: 20,
                       ),
-                      label: Text(
-                        selectedDirectory?.name ?? 'loading...',
-                      ),
+                      label: Consumer(builder: (context, ref, _) {
+                        final selectedDirectory =
+                            ref.watch(selectedDirectoryProvider);
+                        return Text(
+                          selectedDirectory?.name ?? 'loading...',
+                        );
+                      })),
+                ),
+                Positioned(
+                  right: 5,
+                  bottom: 5,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black.withAlpha(160),
+                      padding: const EdgeInsets.all(5),
+                      minimumSize: const Size(0, 0),
+                    ),
+                    onPressed: () => showImageList(ref),
+                    child: const Icon(
+                      Icons.grid_view,
+                      color: Colors.white,
+                      size: 20,
                     ),
                   ),
-                  Positioned(
-                    right: 5,
-                    bottom: 5,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black.withAlpha(160),
-                        padding: const EdgeInsets.all(5),
-                        minimumSize: const Size(0, 0),
-                      ),
-                      onPressed: () => showImageList(),
-                      child: const Icon(
-                        Icons.grid_view,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    ),
-                  )
-                ],
-              ),
+                ),
+                Positioned(
+                  right: 5,
+                  top: 5,
+                  child: isCropping.value
+                      ? const Center(child: CircularProgressIndicator())
+                      : Container(),
+                ),
+              ],
             ),
-            const Divider(height: 2),
-            Expanded(
-              child: Container(
-                color: Colors.white,
-                child: selectedDirectory != null
-                    ? ImagePickerCollection(
-                        directory: selectedDirectory!,
-                        onSelected: (asset) {
-                          selectedImage = asset;
-                          setState(() {});
-                        },
-                      )
-                    : Container(),
-              ),
+          ),
+          const Divider(height: 2),
+          Expanded(
+            child: Container(
+              color: Colors.white,
+              child: selectedDirectory != null
+                  ? ImagePickerCollection(directory: selectedDirectory)
+                  : Container(),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget loadingWidget() {
-    return widget.loadingWidget ??
-        const Center(child: CircularProgressIndicator());
+  Widget loading() {
+    return loadingWidget ?? const Center(child: CircularProgressIndicator());
   }
 
-  showImageList() {
+  showImageList(WidgetRef ref) {
+    final selectedDirectory = ref.watch(selectedDirectoryProvider);
     showModalBottomSheet(
-      context: context,
+      context: ref.context,
       useSafeArea: true,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
@@ -280,22 +321,21 @@ class ImagePickerPage2 extends HookConsumerWidget {
                     angle: pi / 4, child: const Icon(Icons.add, size: 40)),
               ),
             ),
-            body: GridImageList(
-              images: images!,
-              onSelected: (asset) {
-                setState(() => selectedImage = asset);
-                Navigator.of(context).pop();
-              },
-            ),
+            body: ImagePickerCollection(
+                directory: selectedDirectory!, forcedRef: ref),
           ),
         );
       },
     );
   }
 
-  showFolderList() {
+  showFolderList(WidgetRef ref) {
+    final directories = ref.watch(directoriesProvider);
+    final selectedDirectoryController =
+        ref.watch(selectedDirectoryProvider.notifier);
+
     showModalBottomSheet(
-      context: context,
+      context: ref.context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
       ),
@@ -304,7 +344,6 @@ class ImagePickerPage2 extends HookConsumerWidget {
         return Scaffold(
           appBar: AppBar(
             title: const Text('アルバムの選択'),
-            // automaticallyImplyLeading: false,
             automaticallyImplyLeading: true,
             leading: GestureDetector(
               onTap: () => {Navigator.of(context).pop()},
@@ -313,16 +352,14 @@ class ImagePickerPage2 extends HookConsumerWidget {
             ),
           ),
           body: FolderList(
-            directories: directories!,
+            directories: directories,
             onSelected: (directory) async {
               Navigator.of(context).pop();
-
-              selectedDirectory = directory;
+              selectedDirectoryController.state = directory;
               final assetCount = await directory.assetCountAsync;
               images =
                   await directory.getAssetListRange(start: 0, end: assetCount);
-              selectedImage = images!.first;
-              setState(() {});
+              ref.read(selectedImageProvider.notifier).state = images!.first;
             },
           ),
         );
@@ -330,9 +367,11 @@ class ImagePickerPage2 extends HookConsumerWidget {
     );
   }
 
-  List<DropdownMenuItem<AssetPathEntity>> getItems() {
+  List<DropdownMenuItem<AssetPathEntity>> getItems(WidgetRef ref) {
+    final directories = ref.watch(directoriesProvider);
+
     if (directories == null) return [];
-    return directories!.map((directory) {
+    return directories.map((directory) {
       return DropdownMenuItem(
         value: directory,
         child: Text(directory.name),

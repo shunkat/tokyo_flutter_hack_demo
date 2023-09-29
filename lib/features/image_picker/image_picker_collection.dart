@@ -3,22 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:tokyo_flutter_hack_demo/features/image_picker/image_picker_page.dart';
+import 'package:tokyo_flutter_hack_demo/features/image_picker/image_picker_page2.dart';
 
 class ImagePickerCollection extends HookConsumerWidget {
   final AssetPathEntity directory;
   final Function(List<AssetEntity>)? onLoaded;
   final Function(AssetEntity)? onSelected;
+  final WidgetRef? forcedRef;
   const ImagePickerCollection({
     required this.directory,
     this.onLoaded,
     this.onSelected,
+    this.forcedRef,
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final selectImageController = ref.read(selectedImageProvider.notifier);
+  Widget build(BuildContext context, WidgetRef widgetRef) {
+    final ref = forcedRef ?? widgetRef;
+    final selectImageController = ref.watch(selectedImageProvider.notifier);
     final images = useState<List<AssetEntity>?>(null);
 
     useEffect(() {
@@ -32,7 +35,9 @@ class ImagePickerCollection extends HookConsumerWidget {
     return GridImageList(
       images: images.value ?? [],
       onSelected: (asset) {
+        print("selected");
         selectImageController.state = asset;
+        print(selectImageController.hashCode);
         onSelected?.call(asset);
       },
     );
