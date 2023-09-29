@@ -47,6 +47,8 @@
 		<true/>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Need to upload photos</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
 	</dict>
