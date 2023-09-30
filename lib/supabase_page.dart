@@ -105,7 +105,7 @@ class SupabasePage extends StatelessWidget {
                       Wrap(
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          Icon(Icons.map, size: 16.0, color: Colors.grey[800]),
+                          Icon(Icons.map_outlined, size: 16.0, color: Colors.grey[800]),
                           Container(
                             color: Colors.yellow,
                             padding: EdgeInsets.symmetric(horizontal: 4.0), // オプショナル: 追加のパディングを適用
@@ -133,5 +133,4 @@ class SupabasePage extends StatelessWidget {
       ),
     );
   }
-
 }
