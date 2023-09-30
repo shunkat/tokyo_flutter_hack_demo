@@ -3,6 +3,24 @@ import 'package:tokyo_flutter_hack_demo/common/styles/app_color.dart';
 
 // color, weightはcopyWithで変更する
 class AppTextStyle {
+  static TextStyle get noto20Mediumn {
+    return const TextStyle(
+      fontFamily: 'NotoSansJP',
+      fontSize: 20,
+      fontWeight: FontWeight.w400,
+      color: AppColor.black600,
+    );
+  }
+
+  static TextStyle get noto18 {
+    return const TextStyle(
+      fontFamily: 'NotoSansJP',
+      fontSize: 18,
+      fontWeight: FontWeight.w400,
+      color: AppColor.black600,
+    );
+  }
+
   static TextStyle get noto16 {
     return const TextStyle(
       fontFamily: 'NotoSansJP',

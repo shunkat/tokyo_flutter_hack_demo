@@ -656,11 +656,18 @@ PODS:
   - Firebase/Messaging (10.15.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 10.15.0)
+  - Firebase/Storage (10.15.0):
+    - Firebase/CoreOnly
+    - FirebaseStorage (~> 10.15.0)
   - firebase_core (2.16.0):
     - Firebase/CoreOnly (= 10.15.0)
     - Flutter
   - firebase_messaging (14.6.8):
     - Firebase/Messaging (= 10.15.0)
+    - firebase_core
+    - Flutter
+  - firebase_storage (11.2.7):
+    - Firebase/Storage (= 10.15.0)
     - firebase_core
     - Flutter
   - FirebaseAppCheckInterop (10.15.0)
@@ -710,6 +717,12 @@ PODS:
     - nanopb (< 2.30910.0, >= 2.30908.0)
   - FirebaseMessagingInterop (10.15.0)
   - FirebaseSharedSwift (10.15.0)
+  - FirebaseStorage (10.15.0):
+    - FirebaseAppCheckInterop (~> 10.0)
+    - FirebaseAuthInterop (~> 10.0)
+    - FirebaseCore (~> 10.0)
+    - FirebaseCoreExtension (~> 10.0)
+    - GTMSessionFetcher/Core (< 4.0, >= 2.1)
   - Flutter (1.0.0)
   - flutter_local_notifications (0.0.1):
     - Flutter
@@ -839,6 +852,7 @@ DEPENDENCIES:
   - cloud_functions (from `.symlinks/plugins/cloud_functions/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
+  - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
@@ -868,6 +882,7 @@ SPEC REPOS:
     - FirebaseMessaging
     - FirebaseMessagingInterop
     - FirebaseSharedSwift
+    - FirebaseStorage
     - GoogleDataTransport
     - GoogleMaps
     - GoogleUtilities
@@ -889,6 +904,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_messaging:
     :path: ".symlinks/plugins/firebase_messaging/ios"
+  firebase_storage:
+    :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
     :path: Flutter
   flutter_local_notifications:
@@ -923,6 +940,7 @@ SPEC CHECKSUMS:
   Firebase: 66043bd4579e5b73811f96829c694c7af8d67435
   firebase_core: 77172d0a9d8d19d07606e24406e4c2fc14d3265b
   firebase_messaging: 6aff54d420b7ce7080c26dd131b08bc632666852
+  firebase_storage: 0b51a488243202d5bed0d66415fea3425f2d3901
   FirebaseAppCheckInterop: a8c555b1c2db1d9445e6c3a08a848167ddb7eb51
   FirebaseAuthInterop: b566e21e2bc5e44a4d44babc56d05a7e5c10493b
   FirebaseCore: 2cec518b43635f96afe7ac3a9c513e47558abd2e
@@ -934,6 +952,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 0c0ae1eb722ef0c07f7801e5ded8dccd1357d6d4
   FirebaseMessagingInterop: 83f7b1a363bfe30ec8bbff1aa708d38e9d456373
   FirebaseSharedSwift: 34b11d9e675e14ee55e160cb7645bba30a192d14
+  FirebaseStorage: 1d4be239ea32fb3c0f3680a6f2b706d6cabe37f2
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
@@ -958,4 +977,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 70d9d25280d0dd177a5f637cdb0f0b0b12c6a189
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.11.3

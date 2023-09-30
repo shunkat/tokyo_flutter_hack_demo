@@ -31,9 +31,9 @@ class AppButton extends StatelessWidget {
           height: 48,
           decoration: BoxDecoration(
             color: style.backgroundColor(isDisabled || isLoading),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(70),
             border: style.border(isDisabled || isLoading),
-            boxShadow: style.boxShadow(isDisabled || isLoading),
+            // boxShadow: style.boxShadow(isDisabled || isLoading),
           ),
           child: isLoading
               ? Align(
@@ -66,7 +66,7 @@ enum AppButtonStyle {
       case AppButtonStyle.filled:
         return isDisabled
             ? AppColor.black600.withOpacity(0.6)
-            : AppColor.black600;
+            : AppColor.primary;
       case AppButtonStyle.bordered:
         return Colors.transparent;
     }
@@ -75,11 +75,11 @@ enum AppButtonStyle {
   Color textColor(bool isDisabled) {
     switch (this) {
       case AppButtonStyle.filled:
-        return Colors.white;
+        return AppColor.black;
       case AppButtonStyle.bordered:
         return isDisabled
             ? AppColor.black600.withOpacity(0.4)
-            : AppColor.black600;
+            : AppColor.primary;
     }
   }
 

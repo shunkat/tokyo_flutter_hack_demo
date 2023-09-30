@@ -38,11 +38,13 @@ dependencies:
   flutter_dotenv: ^5.1.0
   cloud_firestore: ^4.9.1
   cloud_functions: ^4.4.0
+  firebase_storage: ^11.2.7
   flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.3.2
   go_router: ^11.1.2
   flutter_hooks: ^0.20.1
   hooks_riverpod: ^2.4.0
+  shared_preferences: ^2.2.1
 
   # image_picker
   photo_manager: ^2.7.1
@@ -111,28 +113,28 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 
-# set font
-fonts:
-  - family: NotoSansJp
-    fonts:
-      - asset: assets/fonts/NotoSansJP-Thin.ttf
-        weight: 100
-      - asset: assets/fonts/NotoSansJP-ExtraLight.ttf
-        weight: 200
-      - asset: assets/fonts/NotoSansJP-Light.ttf
-        weight: 300
-      - asset: assets/fonts/NotoSansJP-Regular.ttf
-        weight: 400
-      - asset: assets/fonts/NotoSansJP-Medium.ttf
-        weight: 500
-      - asset: assets/fonts/NotoSansJP-SemiBold.ttf
-        weight: 600
-      - asset: assets/fonts/NotoSansJP-Bold.ttf
-        weight: 700
-      - asset: assets/fonts/NotoSansJP-ExtraBold.ttf
-        weight: 800
-      - asset: assets/fonts/NotoSansJP-Black.ttf
-        weight: 900
+  # set font
+  fonts:
+    - family: NotoSansJP
+      fonts:
+        - asset: assets/fonts/NotoSansJP-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/NotoSansJP-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/NotoSansJP-Light.ttf
+          weight: 300
+        - asset: assets/fonts/NotoSansJP-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSansJP-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSansJP-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/NotoSansJP-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/NotoSansJP-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/NotoSansJP-Black.ttf
+          weight: 900
 
 # set app icon
 flutter_icons:

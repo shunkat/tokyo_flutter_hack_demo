@@ -11,9 +11,12 @@ import 'package:tokyo_flutter_hack_demo/common/styles/app_text_style.dart';
 import 'package:tokyo_flutter_hack_demo/features/image_picker/image_picker_page2.dart';
 import 'package:tokyo_flutter_hack_demo/features/map/map_page.dart';
 import 'package:tokyo_flutter_hack_demo/firebase_page.dart';
+import 'package:tokyo_flutter_hack_demo/pages/register_page.dart';
+import 'package:tokyo_flutter_hack_demo/pages/welcome_page.dart';
 import 'package:tokyo_flutter_hack_demo/router.dart';
 import 'package:tokyo_flutter_hack_demo/services/push_notification_service.dart';
 import 'package:tokyo_flutter_hack_demo/supabase_page.dart';
+import 'package:tokyo_flutter_hack_demo/utils/AppPreference.dart';
 
 import 'firebase_options.dart';
 
@@ -44,11 +47,11 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends HookWidget {
+class MyApp extends HookConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         // push通知の設定
@@ -59,10 +62,15 @@ class MyApp extends HookWidget {
 
         // splash screenの固定を解除してから画面遷移（諸々初期化後に解除する）
         FlutterNativeSplash.remove();
-        goRouter.replace('/home');
-
-        // TODO: 削除
-        print('fcm token: ${await PushNotificationService.getToken()}');
+        final userId = ref.read(userIdProvider);
+        if (userId == null) {
+          // userIdがない場合はwelcome画面へ
+          // goRouter.replace('/welcome');
+          goRouter.replace('/');
+        } else {
+          // goRouter.replace('/home');
+          goRouter.replace('/');
+        }
       });
       return null;
     }, []);
@@ -84,11 +92,11 @@ class MyApp extends HookWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
           title: const Text(
@@ -164,6 +172,29 @@ class HomePage extends StatelessWidget {
               },
               child: const Text('Map画面へ'),
             ),
+            if (ref.watch(userIdProvider) == null)
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RegisterPage(),
+                    ),
+                  );
+                },
+                child: const Text('登録画面へ'),
+              ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const WelcomePage(),
+                  ),
+                );
+              },
+              child: const Text('welcome画面へ'),
+            )
           ],
         ),
       ),
