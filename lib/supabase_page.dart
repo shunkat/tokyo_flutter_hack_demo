@@ -1,129 +1,135 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class SupabasePage extends StatefulWidget {
-  SupabasePage({Key? key}) : super(key: key);
-
-  @override
-  State<SupabasePage> createState() => _SupabasePageState();
-}
-
-class _SupabasePageState extends State<SupabasePage> {
-  // Streamでリアルタイムにデータを取得する.
-  final _noteStream =
-      Supabase.instance.client.from('notes').stream(primaryKey: ['id']);
-  // Formの値を保存するTextEditingController.
-  TextEditingController _body = TextEditingController();
+class SupabasePage extends StatelessWidget {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final String userId = '9pJDDsSPSslFsFSLjlYO'; // 仮のID
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Notes'),
-      ), // StreamBuilderで、画面に描画する.
-      body: StreamBuilder<List<Map<String, dynamic>>>(
-          stream: _noteStream,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            final notes = snapshot.data!;
-
-            return ListView.builder(
-              itemCount: notes.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  trailing: SizedBox(
-                    width: 100,
-                    child: Row(
-                      children: [
-                        IconButton(
-                            onPressed: () async {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return SimpleDialog(
-                                      title: const Text('Add a Note'),
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 1.0),
-                                      children: [
-                                        TextFormField(
-                                          controller: _body,
-                                        ),
-                                        ElevatedButton(
-                                            onPressed: () async {
-                                              // Formから取得したデータを更新する.
-                                              await Supabase.instance.client
-                                                  .from('notes')
-                                                  .update({
-                                                'body': _body.text
-                                              }).match({
-                                                'id': notes[index]['id']
-                                              });
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text('Put'))
-                                      ],
-                                    );
-                                  });
-                            },
-                            icon: Icon(
-                              Icons.edit,
-                              color: Colors.blueAccent,
-                            )),
-                        IconButton(
-                          onPressed: () async {
-                            // Listのデータを受け取りMapでindexから、選択したリストのidを取得する.
-                            // ボタンを押すとクエリが実行されて、データが削除される!
-                            await Supabase.instance.client
-                                .from('notes')
-                                .delete()
-                                .match({'id': notes[index]['id']});
-                          },
-                          icon: Icon(
-                            Icons.delete,
-                            color: Colors.redAccent,
-                          ),
+        title: const Text('ハーフモーダルの仮実装'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'mapをここに表示',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
+            Expanded(
+              child: DraggableScrollableSheet(
+                initialChildSize: 0.2,
+                minChildSize: 0.1,
+                maxChildSize: 0.8,
+                snap: true,
+                snapSizes: const [0.1, 0.5, 0.8],
+                builder: (BuildContext context, ScrollController scrollController) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(16.0),
+                        topRight: Radius.circular(16.0),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          spreadRadius: 4,
+                          blurRadius: 10,
                         ),
                       ],
                     ),
-                  ),
-                  title: Text(notes[index]['body']), // Mapでbodyデータを取得.
-                  subtitle: Text(notes[index]['created_at']), // 作成された日時を取得.
-                );
-              },
-            );
-          }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // showDialogのFormからデータをPostする.
-          showDialog(
-              context: context,
-              builder: (context) {
-                return SimpleDialog(
-                  title: const Text('Add a Note'),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 1.0),
-                  children: [
-                    TextFormField(
-                      controller: _body,
+                    child: StreamBuilder<DocumentSnapshot>(
+                      stream: _firestore.collection('users').doc(userId).snapshots(),
+                      builder: (context, snapshot) {
+                        // :todo なんか変だけど一瞬だから見逃してる、綺麗なローディングのイメージがあればあとで実装しましょう
+                        if (!snapshot.hasData) return CircularProgressIndicator();
+
+                        var userDetails = snapshot.data!['nearbyUserDetails'];
+
+                        return ListView.builder(
+                          controller: scrollController,
+                          itemCount: userDetails.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            var user = userDetails[index];
+                            return _userCard(user['name'], user['avatarUrl'], user['distance'], user['comment'], user['howStrong']);
+                          },
+                        );
+                      },
                     ),
-                    ElevatedButton(
-                        onPressed: () async {
-                          // Formから取得したデータを保存する.
-                          await Supabase.instance.client
-                              .from('notes')
-                              .insert({'body': _body.text});
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Post'))
-                  ],
-                );
-              });
-        },
-        child: const Icon(Icons.add),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget _userCard(String name, String imagePath, String distance, String comment, int howStrong) {
+    return Container(
+      margin: const EdgeInsets.all(8.0),
+      color: Colors.white,
+      padding: const EdgeInsets.all(8.0),
+      child: Stack(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(imagePath),
+                    radius: 50,
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 8.0),
+                      Text(comment),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          Icon(Icons.map_outlined, size: 16.0, color: Colors.grey[800]),
+                          Container(
+                            color: Colors.yellow,
+                            padding: EdgeInsets.symmetric(horizontal: 4.0), // オプショナル: 追加のパディングを適用
+                            child: Text(distance),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            top: 10,
+            right: 10,
+            child: Row(
+              children: List.generate(
+                howStrong,
+                    (index) => Image.asset('assets/images/can.png', width: 20, height: 20),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
