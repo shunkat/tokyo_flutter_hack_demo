@@ -51,5 +51,9 @@
 		<string>Need to upload photos</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>Need to get your location</string>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>Need to get your location</string>
 	</dict>
 </plist>
