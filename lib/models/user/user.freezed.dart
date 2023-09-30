@@ -20,6 +20,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$User {
+  String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get avatarUrl => throw _privateConstructorUsedError;
   double get latitude => throw _privateConstructorUsedError;
@@ -39,7 +40,8 @@ abstract class $UserCopyWith<$Res> {
       _$UserCopyWithImpl<$Res, User>;
   @useResult
   $Res call(
-      {String name,
+      {String id,
+      String name,
       String avatarUrl,
       double latitude,
       double longitude,
@@ -61,6 +63,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? name = null,
     Object? avatarUrl = null,
     Object? latitude = null,
@@ -70,6 +73,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? nearbyUserIds = null,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -110,7 +117,8 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String name,
+      {String id,
+      String name,
       String avatarUrl,
       double latitude,
       double longitude,
@@ -129,6 +137,7 @@ class __$$UserImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? name = null,
     Object? avatarUrl = null,
     Object? latitude = null,
@@ -138,6 +147,10 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? nearbyUserIds = null,
   }) {
     return _then(_$UserImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -174,7 +187,8 @@ class __$$UserImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$UserImpl extends _User {
   const _$UserImpl(
-      {required this.name,
+      {required this.id,
+      required this.name,
       required this.avatarUrl,
       required this.latitude,
       required this.longitude,
@@ -187,6 +201,8 @@ class _$UserImpl extends _User {
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserImplFromJson(json);
 
+  @override
+  final String id;
   @override
   final String name;
   @override
@@ -209,7 +225,7 @@ class _$UserImpl extends _User {
 
   @override
   String toString() {
-    return 'User(name: $name, avatarUrl: $avatarUrl, latitude: $latitude, longitude: $longitude, isActive: $isActive, fcmToken: $fcmToken, nearbyUserIds: $nearbyUserIds)';
+    return 'User(id: $id, name: $name, avatarUrl: $avatarUrl, latitude: $latitude, longitude: $longitude, isActive: $isActive, fcmToken: $fcmToken, nearbyUserIds: $nearbyUserIds)';
   }
 
   @override
@@ -217,6 +233,7 @@ class _$UserImpl extends _User {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UserImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.avatarUrl, avatarUrl) ||
                 other.avatarUrl == avatarUrl) &&
@@ -236,6 +253,7 @@ class _$UserImpl extends _User {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      id,
       name,
       avatarUrl,
       latitude,
@@ -260,7 +278,8 @@ class _$UserImpl extends _User {
 
 abstract class _User extends User {
   const factory _User(
-      {required final String name,
+      {required final String id,
+      required final String name,
       required final String avatarUrl,
       required final double latitude,
       required final double longitude,
@@ -271,6 +290,8 @@ abstract class _User extends User {
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
+  @override
+  String get id;
   @override
   String get name;
   @override

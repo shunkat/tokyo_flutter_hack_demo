@@ -40,6 +40,42 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:80001120434:android:ea542e1ce9e9be4e6d71ab",
+        "android_client_info": {
+          "package_name": "com.sr.hand.strong"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "80001120434-ahpabn0jnj3au5rqssqpmv4a8lfb6fk9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtvieWgSa7EVQ5o5GobdIPLoE48QibQwI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "80001120434-ahpabn0jnj3au5rqssqpmv4a8lfb6fk9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "80001120434-e2k0vste4hk3hsi7n8piq1otrg90fk6o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tokyoFlutterHackDemo.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

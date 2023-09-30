@@ -12,6 +12,7 @@ import 'package:tokyo_flutter_hack_demo/features/image_picker/image_picker_page2
 import 'package:tokyo_flutter_hack_demo/features/map/map_page.dart';
 import 'package:tokyo_flutter_hack_demo/firebase_page.dart';
 import 'package:tokyo_flutter_hack_demo/router.dart';
+import 'package:tokyo_flutter_hack_demo/services/push_notification_service.dart';
 import 'package:tokyo_flutter_hack_demo/supabase_page.dart';
 
 import 'firebase_options.dart';
@@ -30,6 +31,12 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Androidの通知チャンネルを設定
+  await PushNotificationService.initializeLocalNotifications();
+  await PushNotificationService.createNotificationChannel(
+      'tenisutokan_default_channel_id', 'tenisutokan_default_channel_name');
+
   runApp(
     const ProviderScope(
       child: MyApp(),
@@ -44,9 +51,18 @@ class MyApp extends HookWidget {
   Widget build(BuildContext context) {
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
+        // push通知の設定
+        await PushNotificationService.requestPermission();
+        PushNotificationService.startListeningOnPushMessageOpenedApp();
+        // アプリが起動していない状態で、通知をタップして起動した場合の通知処理
+        await PushNotificationService.handleInitialPushMessage();
+
         // splash screenの固定を解除してから画面遷移（諸々初期化後に解除する）
         FlutterNativeSplash.remove();
         goRouter.replace('/home');
+
+        // TODO: 削除
+        print('fcm token: ${await PushNotificationService.getToken()}');
       });
       return null;
     }, []);

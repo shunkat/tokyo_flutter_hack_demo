@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.tokyoFlutterHackDemo.RunnerTests</string>
+	<string>com.sr.hand.strong.RunnerTests</string>
 	<key>PROJECT_ID</key>
 	<string>tokyo-flutter-hack-demo</string>
 	<key>STORAGE_BUCKET</key>
