@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tokyo_flutter_hack_demo/common/components/status_toggle.dart';
 import 'package:tokyo_flutter_hack_demo/common/styles/app_text_style.dart';
 import 'package:tokyo_flutter_hack_demo/models/user/user.dart';
 import 'package:tokyo_flutter_hack_demo/utils/AppPreference.dart';
@@ -108,6 +109,7 @@ class MapPage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("ホーム", style: AppTextStyle.noto16),
+        actions: const [StatusToggle()],
       ),
       body: Container(
         padding: const EdgeInsets.all(14),
