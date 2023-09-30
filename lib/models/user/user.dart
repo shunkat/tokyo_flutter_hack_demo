@@ -6,11 +6,36 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tokyo_flutter_hack_demo/utils/AppPreference.dart';
 
 // import 'package:user_app/models/converters/timestamp.dart';
 
 part 'user.freezed.dart';
 part 'user.g.dart';
+
+final currentUserStreamProvider = StreamProvider.autoDispose<User?>((ref) {
+  final userId = ref.watch(userIdProvider);
+  final listener =
+      FirebaseFirestore.instance.collection('users').doc(userId).snapshots();
+  return listener.map(
+    (event) => User.fromJson(event.data()!),
+  );
+});
+
+final currentUserProvider = Provider.autoDispose<User?>((ref) {
+  final stream = ref.watch(currentUserStreamProvider);
+  return stream.when(
+    data: (data) {
+      return data;
+    },
+    loading: () => null,
+    error: (e, s) {
+      debugPrint("error");
+      debugPrint(e.toString());
+      return null;
+    },
+  );
+});
 
 final allUsersStreamProvider = StreamProvider.autoDispose<List<User>>((ref) {
   final listener = FirebaseFirestore.instance.collection('users').snapshots();

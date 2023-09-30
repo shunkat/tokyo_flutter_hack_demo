@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tokyo_flutter_hack_demo/common/components/app_button.dart';
 import 'package:tokyo_flutter_hack_demo/common/components/app_modal.dart';
+import 'package:tokyo_flutter_hack_demo/common/styles/app_color.dart';
 import 'package:tokyo_flutter_hack_demo/common/styles/app_text_style.dart';
 import 'package:tokyo_flutter_hack_demo/features/image_picker/image_picker_page2.dart';
 import 'package:tokyo_flutter_hack_demo/features/map/map_page.dart';
@@ -65,11 +66,11 @@ class MyApp extends HookConsumerWidget {
         final userId = ref.read(userIdProvider);
         if (userId == null) {
           // userIdがない場合はwelcome画面へ
-          // goRouter.replace('/welcome');
-          goRouter.replace('/');
+          goRouter.replace('/welcome');
+          // goRouter.replace('/');
         } else {
-          // goRouter.replace('/home');
           goRouter.replace('/');
+          // goRouter.replace('/');
         }
       });
       return null;
@@ -81,6 +82,11 @@ class MyApp extends HookConsumerWidget {
       routeInformationParser: goRouter.routeInformationParser,
       routeInformationProvider: goRouter.routeInformationProvider,
       theme: ThemeData(
+        colorScheme: const ColorScheme.light(
+          primary: Colors.black,
+          secondary: Colors.black,
+          background: AppColor.background,
+        ),
         // ripple effectの無効化
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,

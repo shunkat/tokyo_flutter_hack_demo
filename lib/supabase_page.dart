@@ -1,9 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:tokyo_flutter_hack_demo/common/components/distance_tag.dart';
+import 'package:tokyo_flutter_hack_demo/features/map/map_page.dart';
+import 'package:tokyo_flutter_hack_demo/pages/profile_page.dart';
 
 class SupabasePage extends StatelessWidget {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final String userId = '9pJDDsSPSslFsFSLjlYO'; // 仮のID
+  final String userId = '9pJDDsSPSslFsFSLjlYO';
+
+  SupabasePage({super.key}); // 仮のID
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +21,9 @@ class SupabasePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'mapをここに表示',
-                style: Theme.of(context).textTheme.headline6,
-              ),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: MapView(),
             ),
             Expanded(
               child: DraggableScrollableSheet(
@@ -30,15 +32,16 @@ class SupabasePage extends StatelessWidget {
                 maxChildSize: 0.8,
                 snap: true,
                 snapSizes: const [0.1, 0.5, 0.8],
-                builder: (BuildContext context, ScrollController scrollController) {
+                builder:
+                    (BuildContext context, ScrollController scrollController) {
                   return Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(16.0),
                         topRight: Radius.circular(16.0),
                       ),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black12,
                           spreadRadius: 4,
@@ -47,10 +50,15 @@ class SupabasePage extends StatelessWidget {
                       ],
                     ),
                     child: StreamBuilder<DocumentSnapshot>(
-                      stream: _firestore.collection('users').doc(userId).snapshots(),
+                      stream: _firestore
+                          .collection('users')
+                          .doc(userId)
+                          .snapshots(),
                       builder: (context, snapshot) {
                         // :todo なんか変だけど一瞬だから見逃してる、綺麗なローディングのイメージがあればあとで実装しましょう
-                        if (!snapshot.hasData) return CircularProgressIndicator();
+                        if (!snapshot.hasData) {
+                          return const CircularProgressIndicator();
+                        }
 
                         var userDetails = snapshot.data!['nearbyUserDetails'];
 
@@ -59,7 +67,14 @@ class SupabasePage extends StatelessWidget {
                           itemCount: userDetails.length,
                           itemBuilder: (BuildContext context, int index) {
                             var user = userDetails[index];
-                            return _userCard(user['name'], user['avatarUrl'], user['distance'], user['comment'], user['howStrong']);
+                            return _userCard(
+                              user['name'],
+                              user['avatarUrl'],
+                              user['distance'],
+                              user['comment'],
+                              user['howStrong'],
+                              context,
+                            );
                           },
                         );
                       },
@@ -73,7 +88,9 @@ class SupabasePage extends StatelessWidget {
       ),
     );
   }
-  Widget _userCard(String name, String imagePath, String distance, String comment, int howStrong) {
+
+  Widget _userCard(String name, String imagePath, String distance,
+      String comment, int howStrong, BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(8.0),
       color: Colors.white,
@@ -94,26 +111,34 @@ class SupabasePage extends StatelessWidget {
               ),
               Expanded(
                 flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 8.0),
-                      Text(comment),
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          Icon(Icons.map_outlined, size: 16.0, color: Colors.grey[800]),
-                          Container(
-                            color: Colors.yellow,
-                            padding: EdgeInsets.symmetric(horizontal: 4.0), // オプショナル: 追加のパディングを適用
-                            child: Text(distance),
-                          ),
-                        ],
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ProfilePage(
+                          name: name,
+                          avatarUrl: imagePath,
+                          comment: comment,
+                          distance: distance,
+                          howStrong: howStrong,
+                        ),
                       ),
-                    ],
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(name,
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8.0),
+                        Text(comment),
+                        const SizedBox(height: 8.0),
+                        DistanceTag(distance: distance),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -125,7 +150,8 @@ class SupabasePage extends StatelessWidget {
             child: Row(
               children: List.generate(
                 howStrong,
-                    (index) => Image.asset('assets/images/can.png', width: 20, height: 20),
+                (index) =>
+                    Image.asset('assets/images/can.png', width: 20, height: 20),
               ),
             ),
           ),
