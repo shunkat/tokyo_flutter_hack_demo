@@ -1,16 +1,18 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:tokyo_flutter_hack_demo/common/components/app_button.dart';
 import 'package:tokyo_flutter_hack_demo/common/components/app_modal.dart';
 import 'package:tokyo_flutter_hack_demo/common/styles/app_text_style.dart';
+import 'package:tokyo_flutter_hack_demo/features/image_picker/image_picker_page2.dart';
+import 'package:tokyo_flutter_hack_demo/firebase_page.dart';
 import 'package:tokyo_flutter_hack_demo/router.dart';
+import 'package:tokyo_flutter_hack_demo/supabase_page.dart';
+
 import 'firebase_options.dart';
-import 'supabase_page.dart';
-import 'firebase_page.dart';
 
 Future<void> main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +28,6 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   runApp(const MyApp());
 }
 
@@ -62,11 +63,13 @@ class MyApp extends HookWidget {
 }
 
 class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(
+          title: const Text(
         'Select Page',
       )),
       body: Center(
@@ -112,7 +115,21 @@ class HomePage extends StatelessWidget {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => FirebasePage()));
               },
-              child: Text('Firebaseの画面へ'),
+              child: const Text('Firebaseの画面へ'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ImagePicker2(
+                              title: const Text("画像選択"),
+                              onImageSelected: (image) {
+                                Navigator.pop(context);
+                              },
+                            )));
+              },
+              child: const Text('Picker画面へ'),
             ),
           ],
         ),
