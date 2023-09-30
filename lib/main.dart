@@ -11,6 +11,7 @@ import 'package:tokyo_flutter_hack_demo/common/styles/app_text_style.dart';
 import 'package:tokyo_flutter_hack_demo/features/image_picker/image_picker_page2.dart';
 import 'package:tokyo_flutter_hack_demo/features/map/map_page.dart';
 import 'package:tokyo_flutter_hack_demo/firebase_page.dart';
+import 'package:tokyo_flutter_hack_demo/pages/register_page.dart';
 import 'package:tokyo_flutter_hack_demo/router.dart';
 import 'package:tokyo_flutter_hack_demo/services/push_notification_service.dart';
 import 'package:tokyo_flutter_hack_demo/supabase_page.dart';
@@ -163,6 +164,17 @@ class HomePage extends StatelessWidget {
                 );
               },
               child: const Text('Map画面へ'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const RegisterPage(),
+                  ),
+                );
+              },
+              child: const Text('登録画面へ'),
             ),
           ],
         ),

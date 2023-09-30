@@ -145,8 +145,7 @@ class ImagePickerPage2 extends HookConsumerWidget {
                 },
               );
             },
-            child: Text(actionText,
-                style: const TextStyle(fontSize: 18, color: Colors.white)),
+            child: Text(actionText, style: const TextStyle(fontSize: 18)),
           ),
         ],
       ),
