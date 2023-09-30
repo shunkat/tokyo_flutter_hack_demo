@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SupabasePage extends StatelessWidget {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final String userId = '9pJDDsSPSslFsFSLjlYO'; // 仮のID
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Notes Placeholder'),
+        title: const Text('ハーフモーダルの仮実装'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(0),
@@ -42,11 +46,21 @@ class SupabasePage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: ListView.builder(
-                      controller: scrollController,
-                      itemCount: 25,
-                      itemBuilder: (BuildContext context, int index) {
-                        return _userCard('User $index', 'assets/avatar.png', index + 1);
+                    child: StreamBuilder<DocumentSnapshot>(
+                      stream: _firestore.collection('users').doc(userId).snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) return CircularProgressIndicator();
+
+                        var userDetails = snapshot.data!['nearbyUserDetails'];
+
+                        return ListView.builder(
+                          controller: scrollController,
+                          itemCount: userDetails.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            var user = userDetails[index];
+                            return _userCard(user['name'], user['avatarUrl'], user['distance'], user['comment'], user['howStrong']);
+                          },
+                        );
                       },
                     ),
                   );
@@ -59,13 +73,13 @@ class SupabasePage extends StatelessWidget {
     );
   }
 
-  Widget _userCard(String name, String imagePath, int drinks) {
+  Widget _userCard(String name, String imagePath, String distance, String text, int howStrong) {
     return ListTile(
       leading: CircleAvatar(
-        backgroundImage: AssetImage(imagePath), // ダミーの画像パス
+        backgroundImage: AssetImage(imagePath), // ここに適切な画像のURLやパスを設定
       ),
       title: Text(name),
-      subtitle: Text('Drinks: $drinks'),
+      subtitle: Text('$text - $distance - Drinks: $howStrong'),
     );
   }
 }
