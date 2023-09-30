@@ -11,6 +11,7 @@ import 'package:tokyo_flutter_hack_demo/common/styles/app_text_style.dart';
 import 'package:tokyo_flutter_hack_demo/features/image_picker/image_picker_page2.dart';
 import 'package:tokyo_flutter_hack_demo/firebase_page.dart';
 import 'package:tokyo_flutter_hack_demo/router.dart';
+import 'package:tokyo_flutter_hack_demo/services/push_notification_service.dart';
 import 'package:tokyo_flutter_hack_demo/supabase_page.dart';
 
 import 'firebase_options.dart';
@@ -43,9 +44,17 @@ class MyApp extends HookWidget {
   Widget build(BuildContext context) {
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
+        // push通知の設定
+        await PushNotificationService.requestPermission();
+        PushNotificationService.startListeningOnPushMessageOpenedApp();
+        // アプリが起動していない状態で、通知をタップして起動した場合の通知処理
+        await PushNotificationService.handleInitialPushMessage();
+
+        // TODO: 削除
         // splash screenの固定を解除してから画面遷移（諸々初期化後に解除する）
         FlutterNativeSplash.remove();
         goRouter.replace('/home');
+        print('fcm token: ${await PushNotificationService.getToken()}');
       });
       return null;
     }, []);

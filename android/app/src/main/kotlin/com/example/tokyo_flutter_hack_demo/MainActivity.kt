@@ -1,4 +1,4 @@
-package com.example.tokyo_flutter_hack_demo
+package com.sr.hand.strong
 
 import io.flutter.embedding.android.FlutterActivity
 
