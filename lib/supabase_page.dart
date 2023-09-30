@@ -1,130 +1,71 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SupabasePage extends StatefulWidget {
-  SupabasePage({Key? key}) : super(key: key);
-
-  @override
-  State<SupabasePage> createState() => _SupabasePageState();
-}
-
-class _SupabasePageState extends State<SupabasePage> {
-  // Streamでリアルタイムにデータを取得する.
-  final _noteStream =
-      Supabase.instance.client.from('notes').stream(primaryKey: ['id']);
-  // Formの値を保存するTextEditingController.
-  TextEditingController _body = TextEditingController();
-
+class SupabasePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Notes'),
-      ), // StreamBuilderで、画面に描画する.
-      body: StreamBuilder<List<Map<String, dynamic>>>(
-          stream: _noteStream,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            final notes = snapshot.data!;
-
-            return ListView.builder(
-              itemCount: notes.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  trailing: SizedBox(
-                    width: 100,
-                    child: Row(
-                      children: [
-                        IconButton(
-                            onPressed: () async {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return SimpleDialog(
-                                      title: const Text('Add a Note'),
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 1.0),
-                                      children: [
-                                        TextFormField(
-                                          controller: _body,
-                                        ),
-                                        ElevatedButton(
-                                            onPressed: () async {
-                                              // Formから取得したデータを更新する.
-                                              await Supabase.instance.client
-                                                  .from('notes')
-                                                  .update({
-                                                'body': _body.text
-                                              }).match({
-                                                'id': notes[index]['id']
-                                              });
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text('Put'))
-                                      ],
-                                    );
-                                  });
-                            },
-                            icon: Icon(
-                              Icons.edit,
-                              color: Colors.blueAccent,
-                            )),
-                        IconButton(
-                          onPressed: () async {
-                            // Listのデータを受け取りMapでindexから、選択したリストのidを取得する.
-                            // ボタンを押すとクエリが実行されて、データが削除される!
-                            await Supabase.instance.client
-                                .from('notes')
-                                .delete()
-                                .match({'id': notes[index]['id']});
-                          },
-                          icon: Icon(
-                            Icons.delete,
-                            color: Colors.redAccent,
-                          ),
+        title: const Text('My Notes Placeholder'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'mapをここに表示',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
+            Expanded(
+              child: DraggableScrollableSheet(
+                initialChildSize: 0.2,
+                minChildSize: 0.1,
+                maxChildSize: 0.8,
+                snap: true,
+                snapSizes: const [0.1, 0.5, 0.8],
+                builder: (BuildContext context, ScrollController scrollController) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blue[100],
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(16.0),
+                        topRight: Radius.circular(16.0),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          spreadRadius: 4,
+                          blurRadius: 10,
                         ),
                       ],
                     ),
-                  ),
-                  title: Text(notes[index]['body']), // Mapでbodyデータを取得.
-                  subtitle: Text(notes[index]['created_at']), // 作成された日時を取得.
-                );
-              },
-            );
-          }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // showDialogのFormからデータをPostする.
-          showDialog(
-              context: context,
-              builder: (context) {
-                return SimpleDialog(
-                  title: const Text('Add a Note'),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 1.0),
-                  children: [
-                    TextFormField(
-                      controller: _body,
+                    child: ListView.builder(
+                      controller: scrollController,
+                      itemCount: 25,
+                      itemBuilder: (BuildContext context, int index) {
+                        return _userCard('User $index', 'assets/avatar.png', index + 1);
+                      },
                     ),
-                    ElevatedButton(
-                        onPressed: () async {
-                          // Formから取得したデータを保存する.
-                          await Supabase.instance.client
-                              .from('notes')
-                              .insert({'body': _body.text});
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Post'))
-                  ],
-                );
-              });
-        },
-        child: const Icon(Icons.add),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget _userCard(String name, String imagePath, int drinks) {
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundImage: AssetImage(imagePath), // ダミーの画像パス
+      ),
+      title: Text(name),
+      subtitle: Text('Drinks: $drinks'),
     );
   }
 }
