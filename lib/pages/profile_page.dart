@@ -73,7 +73,7 @@ class ProfilePage extends ConsumerWidget {
                   GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 20,
+                    itemCount: howStrong,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 5,

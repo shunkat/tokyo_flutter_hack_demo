@@ -69,7 +69,7 @@ class MyApp extends HookConsumerWidget {
           goRouter.replace('/welcome');
           // goRouter.replace('/');
         } else {
-          goRouter.replace('/register');
+          goRouter.replace('/');
           // goRouter.replace('/');
         }
       });

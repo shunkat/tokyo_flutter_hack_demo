@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tokyo_flutter_hack_demo/common/components/distance_tag.dart';
+import 'package:tokyo_flutter_hack_demo/features/map/map_page.dart';
 import 'package:tokyo_flutter_hack_demo/pages/profile_page.dart';
 
 class SupabasePage extends StatelessWidget {
@@ -20,12 +21,9 @@ class SupabasePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'mapをここに表示',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: MapView(),
             ),
             Expanded(
               child: DraggableScrollableSheet(
