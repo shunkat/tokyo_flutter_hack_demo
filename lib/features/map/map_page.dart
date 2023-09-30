@@ -39,10 +39,10 @@ final userIdProvider = StateProvider((ref) {
 });
 
 class MapPage extends HookConsumerWidget {
-  static const initial_zoom_level = 14.0;
-  final _default_init_position = const CameraPosition(
+  static const initialZoomLevel = 14.0;
+  final defaultInitPosition = const CameraPosition(
     target: LatLng(35.6625578, 139.6962623),
-    zoom: initial_zoom_level,
+    zoom: initialZoomLevel,
   );
 
   const MapPage({super.key});
@@ -121,7 +121,7 @@ class MapPage extends HookConsumerWidget {
           clipBehavior: Clip.hardEdge,
           child: GoogleMap(
             mapType: MapType.normal,
-            initialCameraPosition: _default_init_position,
+            initialCameraPosition: defaultInitPosition,
             onMapCreated: (GoogleMapController controller) {
               mapController.value = controller;
             },
@@ -136,7 +136,7 @@ class MapPage extends HookConsumerWidget {
             circles: {
               Circle(
                 circleId: const CircleId("can"),
-                center: currentPosition.value ?? _default_init_position.target,
+                center: currentPosition.value ?? defaultInitPosition.target,
                 radius: 200,
                 fillColor: const Color.fromRGBO(255, 236, 61, 0.5),
                 strokeWidth: 0,
