@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -25,7 +28,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -43,19 +49,9 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyA23D_JrOQjYQoV4a_jjBxfCi2e41AWvqU',
-    appId: '1:80001120434:web:e021b2322df6f1786d71ab',
-    messagingSenderId: '80001120434',
-    projectId: 'tokyo-flutter-hack-demo',
-    authDomain: 'tokyo-flutter-hack-demo.firebaseapp.com',
-    storageBucket: 'tokyo-flutter-hack-demo.appspot.com',
-    measurementId: 'G-Y2BH8KNCF1',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAtvieWgSa7EVQ5o5GobdIPLoE48QibQwI',
-    appId: '1:80001120434:android:6c919ef3d76228566d71ab',
+    appId: '1:80001120434:android:ea542e1ce9e9be4e6d71ab',
     messagingSenderId: '80001120434',
     projectId: 'tokyo-flutter-hack-demo',
     storageBucket: 'tokyo-flutter-hack-demo.appspot.com',
@@ -63,21 +59,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyByI0hPCkpX_h2QQV0hfiUbd_kMVJaOFe0',
-    appId: '1:80001120434:ios:0796291133c36c7d6d71ab',
+    appId: '1:80001120434:ios:a05d88fdaff142b96d71ab',
     messagingSenderId: '80001120434',
     projectId: 'tokyo-flutter-hack-demo',
     storageBucket: 'tokyo-flutter-hack-demo.appspot.com',
-    iosClientId: '80001120434-u8qssl1mh0n0afqptl5gmld9jdmu2d7l.apps.googleusercontent.com',
-    iosBundleId: 'com.example.tokyoFlutterHackDemo',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyByI0hPCkpX_h2QQV0hfiUbd_kMVJaOFe0',
-    appId: '1:80001120434:ios:460163126f575c7b6d71ab',
-    messagingSenderId: '80001120434',
-    projectId: 'tokyo-flutter-hack-demo',
-    storageBucket: 'tokyo-flutter-hack-demo.appspot.com',
-    iosClientId: '80001120434-e2k0vste4hk3hsi7n8piq1otrg90fk6o.apps.googleusercontent.com',
-    iosBundleId: 'com.example.tokyoFlutterHackDemo.RunnerTests',
+    iosBundleId: 'com.sr.hand.strong',
   );
 }

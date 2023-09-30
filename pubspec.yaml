@@ -52,6 +52,9 @@ dependencies:
   modal_bottom_sheet: ^2.1.2
 
   google_maps_flutter: ^2.5.0
+  firebase_messaging: ^14.6.8
+  firebase_core: ^2.16.0
+  flutter_local_notifications: ^15.1.1
   geolocator: ^10.1.0
 
 dev_dependencies:
