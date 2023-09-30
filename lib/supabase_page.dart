@@ -33,7 +33,7 @@ class SupabasePage extends StatelessWidget {
                 builder: (BuildContext context, ScrollController scrollController) {
                   return Container(
                     decoration: BoxDecoration(
-                      color: Colors.blue[100],
+                      color: Colors.grey[200],
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(16.0),
                         topRight: Radius.circular(16.0),
@@ -49,6 +49,7 @@ class SupabasePage extends StatelessWidget {
                     child: StreamBuilder<DocumentSnapshot>(
                       stream: _firestore.collection('users').doc(userId).snapshots(),
                       builder: (context, snapshot) {
+                        // :todo なんか変だけど一瞬だから見逃してる、綺麗なローディングのイメージがあればあとで実装しましょう
                         if (!snapshot.hasData) return CircularProgressIndicator();
 
                         var userDetails = snapshot.data!['nearbyUserDetails'];
@@ -72,14 +73,65 @@ class SupabasePage extends StatelessWidget {
       ),
     );
   }
-
-  Widget _userCard(String name, String imagePath, String distance, String text, int howStrong) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundImage: AssetImage(imagePath), // ここに適切な画像のURLやパスを設定
+  Widget _userCard(String name, String imagePath, String distance, String comment, int howStrong) {
+    return Container(
+      margin: const EdgeInsets.all(8.0),
+      color: Colors.white,
+      padding: const EdgeInsets.all(8.0),
+      child: Stack(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(imagePath),
+                    radius: 50,
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 8.0),
+                      Text(comment),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          Icon(Icons.map, size: 16.0, color: Colors.grey[800]),
+                          Container(
+                            color: Colors.yellow,
+                            padding: EdgeInsets.symmetric(horizontal: 4.0), // オプショナル: 追加のパディングを適用
+                            child: Text(distance),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            top: 10,
+            right: 10,
+            child: Row(
+              children: List.generate(
+                howStrong,
+                    (index) => Image.asset('assets/images/can.png', width: 20, height: 20),
+              ),
+            ),
+          ),
+        ],
       ),
-      title: Text(name),
-      subtitle: Text('$text - $distance - Drinks: $howStrong'),
     );
   }
+
 }
