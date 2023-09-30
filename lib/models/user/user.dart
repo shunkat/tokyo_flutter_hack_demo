@@ -1,6 +1,7 @@
 // 保存時の自動整形でfoundationが消えないように警告を消している
 // ignore: unused_import, directives_ordering
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -20,16 +21,12 @@ final allUsersProvider = Provider.autoDispose<List<User>?>((ref) {
   final stream = ref.watch(allUsersStreamProvider);
   return stream.when(
     data: (data) {
-      print("data");
       return data;
     },
-    loading: () {
-      print("loading");
-      return null;
-    },
+    loading: () => null,
     error: (e, s) {
-      print("error");
-      print(e);
+      debugPrint("error");
+      debugPrint(e.toString());
       return null;
     },
   );
@@ -39,6 +36,7 @@ final allUsersProvider = Provider.autoDispose<List<User>?>((ref) {
 class User with _$User {
   const User._();
   const factory User({
+    required String id,
     required String name,
     required String avatarUrl,
     required double latitude,
