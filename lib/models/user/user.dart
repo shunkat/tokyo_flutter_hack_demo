@@ -1,5 +1,7 @@
 // 保存時の自動整形でfoundationが消えないように警告を消している
 // ignore: unused_import, directives_ordering
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -38,15 +40,38 @@ class User with _$User {
   const factory User({
     required String id,
     required String name,
+    required String comment,
     required String avatarUrl,
+    required int howStrong,
     required double latitude,
     required double longitude,
     required bool isActive,
     required String? fcmToken,
-    required List<String> nearbyUserIds,
+    required List<NearbyUser> nearbyUserDetails,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
+  Map<String, dynamic> toFirestoreJson() {
+    return {
+      ...toJson(),
+    };
+  }
+}
+
+@freezed
+class NearbyUser with _$NearbyUser {
+  const NearbyUser._();
+  const factory NearbyUser({
+    required String name,
+    required String comment,
+    required String avatarUrl,
+    required int howStrong,
+    required String distance,
+  }) = _NearbyUser;
+
+  factory NearbyUser.fromJson(Map<String, dynamic> json) =>
+      _$NearbyUserFromJson(json);
 
   Map<String, dynamic> toFirestoreJson() {
     return {
