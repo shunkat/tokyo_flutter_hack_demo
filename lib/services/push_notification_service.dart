@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class PushNotificationService {
   static Future<String?> getToken() async {
@@ -48,28 +49,29 @@ class PushNotificationService {
   //--------------------
   // androidの通知チャンネル作成
   //--------------------
-  // static Future<void> initializeLocalNotifications() async {
-  //   FlutterLocalNotificationsPlugin notificationPlugin =
-  //       FlutterLocalNotificationsPlugin();
-  //   const initializationSettings = InitializationSettings(
-  //       iOS: DarwinInitializationSettings(),
-  //       android: AndroidInitializationSettings(
-  //           '@drawable/ic_stat_oshigoto_splash_icon'));
-  //   await notificationPlugin.initialize(
-  //     initializationSettings,
-  //   );
-  // }
+  static Future<void> initializeLocalNotifications() async {
+    FlutterLocalNotificationsPlugin notificationPlugin =
+        FlutterLocalNotificationsPlugin();
+    // TODO: アイコン変更
+    const initializationSettings = InitializationSettings(
+        iOS: DarwinInitializationSettings(),
+        android: AndroidInitializationSettings(
+            '@drawable/ic_stat_oshigoto_splash_icon'));
+    await notificationPlugin.initialize(
+      initializationSettings,
+    );
+  }
 
-  // static Future<void> createNotificationChannel(String id, String name) async {
-  //   final notificationPlugin = FlutterLocalNotificationsPlugin();
-  //   final channel = AndroidNotificationChannel(id, name,
-  //       // これでポップアップ通知がデフォルトで許可になる
-  //       importance: Importance.high);
-  //   await notificationPlugin
-  //       .resolvePlatformSpecificImplementation<
-  //           AndroidFlutterLocalNotificationsPlugin>()
-  //       ?.createNotificationChannel(channel);
-  // }
+  static Future<void> createNotificationChannel(String id, String name) async {
+    final notificationPlugin = FlutterLocalNotificationsPlugin();
+    final channel = AndroidNotificationChannel(id, name,
+        // これでポップアップ通知がデフォルトで許可になる
+        importance: Importance.high);
+    await notificationPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+  }
 
   //--------------------
   // 通知の処理

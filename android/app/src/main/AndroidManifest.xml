@@ -4,6 +4,12 @@
         android:label="手スト"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
+        <!-- TODO: アイコン変更 -->
+        <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_oshigoto_splash_icon" />
+        <meta-data
+        android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

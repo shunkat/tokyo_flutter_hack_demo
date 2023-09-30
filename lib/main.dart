@@ -30,6 +30,12 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Androidの通知チャンネルを設定
+  await PushNotificationService.initializeLocalNotifications();
+  await PushNotificationService.createNotificationChannel(
+      'tenisutokan_default_channel_id', 'tenisutokan_default_channel_name');
+
   runApp(
     const ProviderScope(
       child: MyApp(),
@@ -50,10 +56,11 @@ class MyApp extends HookWidget {
         // アプリが起動していない状態で、通知をタップして起動した場合の通知処理
         await PushNotificationService.handleInitialPushMessage();
 
-        // TODO: 削除
         // splash screenの固定を解除してから画面遷移（諸々初期化後に解除する）
         FlutterNativeSplash.remove();
         goRouter.replace('/home');
+
+        // TODO: 削除
         print('fcm token: ${await PushNotificationService.getToken()}');
       });
       return null;
