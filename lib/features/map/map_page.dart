@@ -6,7 +6,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tokyo_flutter_hack_demo/common/styles/app_text_style.dart';
 import 'package:tokyo_flutter_hack_demo/models/user/user.dart';
+import 'package:tokyo_flutter_hack_demo/utils/AppPreference.dart';
 import 'package:tokyo_flutter_hack_demo/utils/determinPosition.dart';
 import 'package:tokyo_flutter_hack_demo/utils/uint8ListFromAsset.dart';
 
@@ -32,10 +34,6 @@ final canMarkerImageProvider = StateProvider((ref) {
 
 final zoomLevelProvider = StateProvider<double>((ref) {
   return 14.0;
-});
-
-final userIdProvider = StateProvider((ref) {
-  return "9pJDDsSPSslFsFSLjlYO";
 });
 
 class MapPage extends HookConsumerWidget {
@@ -109,7 +107,7 @@ class MapPage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("???????"),
+        title: Text("ホーム", style: AppTextStyle.noto16),
       ),
       body: Container(
         padding: const EdgeInsets.all(14),

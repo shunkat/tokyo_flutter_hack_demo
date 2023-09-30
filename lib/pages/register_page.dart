@@ -8,6 +8,7 @@ import 'package:image/image.dart' as img;
 import 'package:tokyo_flutter_hack_demo/common/styles/app_text_style.dart';
 import 'package:tokyo_flutter_hack_demo/features/image_picker/image_picker_page2.dart';
 import 'package:tokyo_flutter_hack_demo/models/user/user.dart';
+import 'package:tokyo_flutter_hack_demo/utils/AppPreference.dart';
 import 'package:tokyo_flutter_hack_demo/utils/determinPosition.dart';
 
 class RegisterPage extends HookWidget {
@@ -20,6 +21,9 @@ class RegisterPage extends HookWidget {
     final comment = useState<String>("");
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('登録'),
+      ),
       body: Column(
         children: [
           const SizedBox(height: 100),
@@ -102,6 +106,8 @@ class RegisterPage extends HookWidget {
               await FirebaseFirestore.instance.collection('users').doc(id).set(
                     user.toFirestoreJson(),
                   );
+
+              await AppPreference().setUserId(id);
 
               Navigator.pop(context);
             },
