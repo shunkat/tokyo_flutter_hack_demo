@@ -71,6 +71,7 @@ class Matching with _$Matching {
   Map<String, dynamic> toFirestoreJson() {
     return {
       ...toJson(),
+      "lastJoinAt": lastJoinAt.toIso8601String(),
       "userSummaries": userSummaries.map((e) => e.toFirestoreJson()).toList(),
     };
   }

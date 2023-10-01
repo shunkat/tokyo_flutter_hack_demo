@@ -152,7 +152,7 @@ class KanpaiToast extends HookConsumerWidget {
                                 .doc(matching.id)
                                 .update({
                               'participants': FieldValue.arrayUnion([userId]),
-                              'lastJoinAt': DateTime.now(),
+                              'lastJoinAt': DateTime.now().toIso8601String(),
                             });
                           },
                           text: "乾杯する"),
