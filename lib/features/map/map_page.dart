@@ -60,14 +60,14 @@ class MapPage extends HookConsumerWidget {
         leading: IconButton(
             onPressed: () async {
               // ログアウト処理
-              // AppPreference.removeUserId();
-              KanpaiModal.show(context,
-                  avatarUrls: [
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRW4CVeofvoVFhB92OZEAe_FPQx7_mpYWbhg&usqp=CAU',
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRW4CVeofvoVFhB92OZEAe_FPQx7_mpYWbhg&usqp=CAU',
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRW4CVeofvoVFhB92OZEAe_FPQx7_mpYWbhg&usqp=CAU',
-                  ],
-                  onPop: () {});
+              AppPreference.removeUserId();
+              // KanpaiModal.show(context,
+              //     avatarUrls: [
+              //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRW4CVeofvoVFhB92OZEAe_FPQx7_mpYWbhg&usqp=CAU',
+              //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRW4CVeofvoVFhB92OZEAe_FPQx7_mpYWbhg&usqp=CAU',
+              //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRW4CVeofvoVFhB92OZEAe_FPQx7_mpYWbhg&usqp=CAU',
+              //     ],
+              //     onPop: () {});
             },
             icon: const Icon(Icons.logout)),
         actions: const [
