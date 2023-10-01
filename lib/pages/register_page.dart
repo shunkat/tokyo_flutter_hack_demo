@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image/image.dart' as img;
 import 'package:tokyo_flutter_hack_demo/common/components/app_button.dart';
@@ -11,6 +11,7 @@ import 'package:tokyo_flutter_hack_demo/common/styles/app_color.dart';
 import 'package:tokyo_flutter_hack_demo/common/styles/app_text_style.dart';
 import 'package:tokyo_flutter_hack_demo/features/image_picker/image_picker_page2.dart';
 import 'package:tokyo_flutter_hack_demo/models/user/user.dart';
+import 'package:tokyo_flutter_hack_demo/router.dart';
 import 'package:tokyo_flutter_hack_demo/utils/AppPreference.dart';
 import 'package:tokyo_flutter_hack_demo/utils/determinPosition.dart';
 
@@ -34,6 +35,8 @@ class RegisterPage extends HookConsumerWidget {
     final imageWidth = MediaQuery.of(context).size.width - 28;
     final nameController = ref.watch(nameProvider.notifier);
     final commentController = ref.watch(commentProvider.notifier);
+
+    final isSending = useState<bool>(false);
 
     return Scaffold(
       appBar: AppBar(
@@ -169,9 +172,10 @@ class RegisterPage extends HookConsumerWidget {
 
                   await AppPreference().setUserId(id);
 
-                  GoRouter.of(context).replace('/home');
+                  goRouter.push('/map');
                 },
-                text: "入力内容を確定",
+                text: "登録する",
+                isLoading: isSending.value,
               ),
             ],
           ),

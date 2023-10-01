@@ -12,6 +12,16 @@ class AppPreference {
     final preference = await SharedPreferences.getInstance();
     preference.setString(userIdPath, userId);
   }
+
+  static Future<String?> getUserId() async {
+    final preference = await SharedPreferences.getInstance();
+    return preference.getString(userIdPath);
+  }
+
+  static Future<void> removeUserId() async {
+    final preference = await SharedPreferences.getInstance();
+    preference.remove(userIdPath);
+  }
 }
 
 final userIdProvider = StateProvider((ref) {

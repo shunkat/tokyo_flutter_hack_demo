@@ -21,6 +21,8 @@ class StatusToggle extends ConsumerWidget {
       activeTrackColor: AppColor.primary,
       inactiveThumbColor: AppColor.white,
       inactiveTrackColor: AppColor.grey100,
+      trackOutlineColor:
+          MaterialStateColor.resolveWith((_) => AppColor.grey100),
       onChanged: (_) {
         FirebaseFirestore.instance.collection('users').doc(user.id).update({
           'isActive': !user.isActive,

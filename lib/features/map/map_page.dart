@@ -47,6 +47,11 @@ class MapPage extends HookConsumerWidget {
         title: const Text(
           'ホーム',
         ),
+        leading: IconButton(
+            onPressed: () async {
+              AppPreference.removeUserId();
+            },
+            icon: const Icon(Icons.logout)),
         actions: const [
           StatusToggle(),
         ],
