@@ -8,6 +8,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tokyo_flutter_hack_demo/common/components/nearby_user_list.dart';
 import 'package:tokyo_flutter_hack_demo/common/components/status_toggle.dart';
+import 'package:tokyo_flutter_hack_demo/features/matching/kanpai_toast.dart';
+import 'package:tokyo_flutter_hack_demo/features/matching/matching_suggest_toast.dart';
 import 'package:tokyo_flutter_hack_demo/models/user/user.dart';
 import 'package:tokyo_flutter_hack_demo/utils/AppPreference.dart';
 import 'package:tokyo_flutter_hack_demo/utils/determinPosition.dart';
@@ -42,6 +44,13 @@ class MapPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final matchiableUsers = ref.watch(matchiableUsersProvider);
+
+    useEffect(() {
+      print(matchiableUsers.length);
+      return null;
+    }, [matchiableUsers]);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -96,6 +105,13 @@ class MapPage extends HookConsumerWidget {
               );
             },
           ),
+          const Positioned(
+            bottom: 20,
+            right: 20,
+            left: 20,
+            child: MatchingSuggestToast(),
+          ),
+          const Positioned(top: 20, right: 20, left: 20, child: KanpaiToast()),
         ],
       ),
     );

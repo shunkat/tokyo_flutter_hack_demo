@@ -7,8 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tokyo_flutter_hack_demo/utils/AppPreference.dart';
-
-// import 'package:user_app/models/converters/timestamp.dart';
+import 'package:tokyo_flutter_hack_demo/utils/calculateDistance.dart';
 
 part 'user.freezed.dart';
 part 'user.g.dart';
@@ -35,6 +34,25 @@ final currentUserProvider = Provider.autoDispose<User?>((ref) {
       return null;
     },
   );
+});
+
+final matchiableUsersProvider = StateProvider.autoDispose<List<User>>((ref) {
+  final allUsers = ref.watch(allUsersProvider);
+  final currentUser = ref.watch(currentUserProvider);
+
+  if (allUsers == null || currentUser == null) {
+    return [];
+  }
+
+  final machiables = allUsers.where((user) {
+    if (user.id == currentUser.id) return false;
+
+    final distance = calculateDistance(user.latitude, user.longitude,
+        currentUser.latitude, currentUser.longitude);
+    return distance < 0.05;
+  });
+
+  return machiables.toList();
 });
 
 final allUsersStreamProvider = StreamProvider.autoDispose<List<User>>((ref) {

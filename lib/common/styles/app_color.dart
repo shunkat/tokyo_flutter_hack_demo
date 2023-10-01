@@ -14,6 +14,7 @@ class AppColor {
   static const black900 = Color(0xFF000000);
 
   static const primary = Color(0xFFf8e430);
+  static const secondary = Color(0xFFF14E2A);
 
   static const welcomGradientTop = Color(0xFFFFFFFF);
   static const welcomGradientBottom = Color(0xFFD6D6D6);

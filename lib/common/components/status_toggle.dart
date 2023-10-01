@@ -12,7 +12,7 @@ class StatusToggle extends ConsumerWidget {
     final user = ref.watch(currentUserProvider);
 
     if (user == null) {
-      throw Exception('user is null');
+      return Container();
     }
 
     return Switch(
