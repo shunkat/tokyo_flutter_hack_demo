@@ -80,7 +80,10 @@ class ProfilePage extends ConsumerWidget {
                             crossAxisSpacing: 2,
                             mainAxisSpacing: 2),
                     itemBuilder: (_, i) {
-                      return Image.asset("assets/images/can.png");
+                      return Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        child: Image.asset("assets/images/lemon_can.png"),
+                      );
                     },
                   ),
                 ],

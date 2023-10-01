@@ -18,5 +18,5 @@ class AppColor {
   static const secondary = Color(0xFFF14E2A);
 
   static const welcomGradientTop = Color(0xFFFFFFFF);
-  static const welcomGradientBottom = Color(0xFFD6D6D6);
+  static const welcomGradientBottom = Color.fromARGB(255, 182, 182, 182);
 }

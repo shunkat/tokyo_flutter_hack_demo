@@ -68,9 +68,10 @@ class KanpaiModal extends ConsumerWidget {
                 height: 30,
               ),
               Image.asset(
-                'assets/images/kanpai_modal_image.png',
+                'assets/images/kanpai_animation.gif',
                 width: 248,
                 height: 266,
+                fit: BoxFit.fitHeight,
               ),
               const SizedBox(
                 height: 30,
