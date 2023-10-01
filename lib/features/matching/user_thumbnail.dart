@@ -11,7 +11,7 @@ class UserThumbnail extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          width: 3,
+          width: 2,
           color: AppColor.primary,
         ),
         borderRadius: BorderRadius.circular(100),
@@ -24,8 +24,8 @@ class UserThumbnail extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: CachedNetworkImage(
           imageUrl: url,
-          width: 40,
-          height: 40,
+          width: 36,
+          height: 36,
         ),
       ),
     );
