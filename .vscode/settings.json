@@ -8,5 +8,5 @@
   "files.watcherExclude": {
     "**/.fvm": true
   },
-  "cSpell.words": ["dotenv", "noto", "supabase", "tenisutokan"]
+  "cSpell.words": ["dotenv", "Kanpai", "noto", "supabase", "tenisutokan"]
 }

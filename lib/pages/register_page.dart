@@ -12,6 +12,7 @@ import 'package:tokyo_flutter_hack_demo/common/styles/app_text_style.dart';
 import 'package:tokyo_flutter_hack_demo/features/image_picker/image_picker_page2.dart';
 import 'package:tokyo_flutter_hack_demo/models/user/user.dart';
 import 'package:tokyo_flutter_hack_demo/router.dart';
+import 'package:tokyo_flutter_hack_demo/services/push_notification_service.dart';
 import 'package:tokyo_flutter_hack_demo/utils/AppPreference.dart';
 import 'package:tokyo_flutter_hack_demo/utils/determinPosition.dart';
 
@@ -148,6 +149,7 @@ class RegisterPage extends HookConsumerWidget {
                   );
 
                   final avatarUrl = await imageRef.getDownloadURL();
+                  final fcmToken = await PushNotificationService.getToken();
 
                   final position = await determinePosition();
                   final user = User(
@@ -158,7 +160,7 @@ class RegisterPage extends HookConsumerWidget {
                     latitude: position.latitude,
                     longitude: position.longitude,
                     isActive: false,
-                    fcmToken: null,
+                    fcmToken: fcmToken,
                     howStrong: 0,
                     nearbyUserDetails: [],
                   );

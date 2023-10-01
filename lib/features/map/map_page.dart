@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tokyo_flutter_hack_demo/common/components/kanpai_modal.dart';
 import 'package:tokyo_flutter_hack_demo/common/components/nearby_user_list.dart';
 import 'package:tokyo_flutter_hack_demo/common/components/status_toggle.dart';
 import 'package:tokyo_flutter_hack_demo/models/user/user.dart';
@@ -49,7 +50,15 @@ class MapPage extends HookConsumerWidget {
         ),
         leading: IconButton(
             onPressed: () async {
-              AppPreference.removeUserId();
+              // ログアウト処理
+              // AppPreference.removeUserId();
+              KanpaiModal.show(context,
+                  avatarUrls: [
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRW4CVeofvoVFhB92OZEAe_FPQx7_mpYWbhg&usqp=CAU',
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRW4CVeofvoVFhB92OZEAe_FPQx7_mpYWbhg&usqp=CAU',
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRW4CVeofvoVFhB92OZEAe_FPQx7_mpYWbhg&usqp=CAU',
+                  ],
+                  onPop: () {});
             },
             icon: const Icon(Icons.logout)),
         actions: const [
