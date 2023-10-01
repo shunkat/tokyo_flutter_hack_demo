@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tokyo_flutter_hack_demo/common/components/app_secondary_button.dart';
+import 'package:tokyo_flutter_hack_demo/common/components/kanpai_modal.dart';
 import 'package:tokyo_flutter_hack_demo/common/styles/app_text_style.dart';
 import 'package:tokyo_flutter_hack_demo/features/matching/user_thumbnail_list.dart';
 import 'package:tokyo_flutter_hack_demo/models/matching/matching.dart';
@@ -40,6 +41,7 @@ class KanpaiToast extends HookConsumerWidget {
             isMissMatch.value = true;
           } else if (matching.participants.length >= 2) {
             // 成立
+            KanpaiModal.show(context, avatarUrls: urls, onPop: () {});
             print("成立");
             if (userId == null) return;
             FirebaseFirestore.instance.collection('users').doc(userId).update(
