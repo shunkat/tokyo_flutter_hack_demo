@@ -132,6 +132,7 @@ class RegisterPage extends HookConsumerWidget {
               const SizedBox(height: 32),
               AppButton(
                 onTap: () async {
+                  isSending.value = true;
                   final id =
                       FirebaseFirestore.instance.collection('users').doc().id;
 
@@ -173,6 +174,8 @@ class RegisterPage extends HookConsumerWidget {
                       );
 
                   await AppPreference().setUserId(id);
+
+                  isSending.value = false;
 
                   goRouter.push('/map');
                 },

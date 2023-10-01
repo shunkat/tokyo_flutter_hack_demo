@@ -65,7 +65,7 @@ enum AppButtonStyle {
     switch (this) {
       case AppButtonStyle.filled:
         return isDisabled
-            ? AppColor.black600.withOpacity(0.6)
+            ? AppColor.primary.withOpacity(0.6)
             : AppColor.primary;
       case AppButtonStyle.bordered:
         return Colors.transparent;
@@ -78,7 +78,7 @@ enum AppButtonStyle {
         return AppColor.black;
       case AppButtonStyle.bordered:
         return isDisabled
-            ? AppColor.black600.withOpacity(0.4)
+            ? AppColor.primary.withOpacity(0.4)
             : AppColor.primary;
     }
   }
