@@ -10,10 +10,12 @@ class UserThumbnailList extends StatelessWidget {
     return Stack(
       children: [
         ...urls
+            .asMap()
+            .entries
             .map(
-              (url) => Positioned(
-                left: 0,
-                child: UserThumbnail(url: urls[0]),
+              (entry) => Positioned(
+                left: entry.key * 20.0,
+                child: UserThumbnail(url: entry.value),
               ),
             )
             .toList(),

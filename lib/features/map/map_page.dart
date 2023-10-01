@@ -120,7 +120,7 @@ class MapPage extends HookConsumerWidget {
             },
           ),
           const Positioned(
-            bottom: 20,
+            bottom: 40,
             right: 20,
             left: 20,
             child: MatchingSuggestToast(),

@@ -46,6 +46,7 @@ final matchiableUsersProvider = StateProvider.autoDispose<List<User>>((ref) {
 
   final machiables = allUsers.where((user) {
     if (user.id == currentUser.id) return false;
+    if (user.isActive == false) return false;
 
     final distance = calculateDistance(user.latitude, user.longitude,
         currentUser.latitude, currentUser.longitude);

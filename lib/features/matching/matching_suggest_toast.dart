@@ -17,7 +17,18 @@ class MatchingSuggestToast extends ConsumerWidget {
     final matching = ref.watch(relatedMatchingProvider);
 
     return Container(
-        color: AppColor.white,
+        decoration: BoxDecoration(
+          color: AppColor.white,
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 0,
+              blurRadius: 4,
+              offset: const Offset(0, 2), // changes position of shadow
+            ),
+          ],
+        ),
         padding: const EdgeInsets.all(8),
         height: 56,
         width: 200,
@@ -32,7 +43,6 @@ class MatchingSuggestToast extends ConsumerWidget {
                             matchiableUsers.map((e) => e.avatarUrl).toList()));
               },
             ),
-            const Spacer(),
             const Text("近くのメンバーがいます！"),
             SizedBox(
               width: 60,
@@ -43,14 +53,20 @@ class MatchingSuggestToast extends ConsumerWidget {
                   if (userId == null) return;
                   final doc =
                       FirebaseFirestore.instance.collection("matchings").doc();
+                  final currentUser = ref.read(currentUserProvider);
+
                   final newMatching = Matching(
                     id: doc.id,
                     createdBy: userId,
                     status: MatchingStatus.pending,
                     userSummaries: matchiableUsers
-                        .map((e) =>
-                            UserSummary(id: e.id, avatarUrl: e.avatarUrl))
-                        .toList(),
+                            .map((e) =>
+                                UserSummary(id: e.id, avatarUrl: e.avatarUrl))
+                            .toList() +
+                        [
+                          UserSummary(
+                              id: userId, avatarUrl: currentUser!.avatarUrl)
+                        ],
                     candidates:
                         matchiableUsers.map((e) => e.id).toList() + [userId],
                     participants: [userId],
