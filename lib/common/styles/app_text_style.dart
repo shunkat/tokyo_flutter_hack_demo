@@ -57,6 +57,15 @@ class AppTextStyle {
     );
   }
 
+  static TextStyle get noto12Medium {
+    return const TextStyle(
+      fontFamily: 'NotoSansJP',
+      fontSize: 12,
+      fontWeight: FontWeight.w500,
+      color: AppColor.black600,
+    );
+  }
+
   static TextStyle get hint {
     return const TextStyle(
       fontFamily: 'NotoSansJP',
